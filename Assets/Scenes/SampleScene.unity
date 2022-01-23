@@ -326,6 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 854410286}
+  boardController: {fileID: 1478748917}
 --- !u!1 &854410285 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1953271650171834, guid: dbf7a0c9d76b77a40af3104feac0641d,
@@ -429,7 +430,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.413175, y: -0, z: -0, w: 0.91065174}
-  m_LocalPosition: {x: 7, y: 9, z: -4.5}
+  m_LocalPosition: {x: -0.02, y: 9, z: -7.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -479,4 +480,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tile: {fileID: 2358171708268028004, guid: b5d507941c988486295d9d3691b1bc04, type: 3}
-  movementSystem: {fileID: 733372993}

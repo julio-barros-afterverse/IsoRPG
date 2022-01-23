@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
+    private Queue<Vector3> _path = new Queue<Vector3>();
     private Vector3 _targetPosition = Vector3.zero;
     private Vector3 _sourcePosition = Vector3.zero;
     private float _animationProgress = 1f;
@@ -15,8 +16,23 @@ public class CharacterController : MonoBehaviour
 
     public void Move2D(Vector3 position)
     {
+        transform.position = new Vector3(position.x, _sourcePosition.y, position.z);
+        _animationProgress = 1f;
+    }
+    public void Move2D(Queue<Vector3> path)
+    {
+        _path = path;
+    }
+
+    private void RestartInterpolation()
+    {
+        if (_path.Count == 0)
+        {
+            return;
+        }
+
+        _targetPosition = _path.Dequeue();
         _sourcePosition = transform.position;
-        _targetPosition = new Vector3(position.x, _sourcePosition.y, position.z);
         transform.LookAt(_targetPosition);
         _animationProgress = 0f;
         _animationDuration = Vector3.Distance(_targetPosition, _sourcePosition) / Speed;
@@ -25,7 +41,11 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        if (_animationProgress >= 1f) return;
+        if (_animationProgress >= 1f)
+        {
+            if (_path.Count > 0) { RestartInterpolation(); }
+            else { return; }
+        }
         _animationProgress += Time.deltaTime / _animationDuration;
         transform.position = Vector3.Lerp(_sourcePosition, _targetPosition, Mathf.Clamp01(_animationProgress));
         

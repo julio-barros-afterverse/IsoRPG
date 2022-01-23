@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Model;
 using UnityEngine;
@@ -7,9 +6,10 @@ using UnityEngine;
 public class BoardController : MonoBehaviour
 {
     [SerializeField] private GameObject tile;
-    [SerializeField] private TileMovementSystem movementSystem;
     private TileController[][] _tileArray;
-    private Dictionary<Hex, TileController> _coordinates = new Dictionary<Hex, TileController>();
+    private readonly Dictionary<Hex, TileController> _coordinates = new Dictionary<Hex, TileController>();
+    public Dictionary<Hex, TileController> Coordinates => _coordinates;
+    private event Action ONFinished;
 
     void Start()
     {
@@ -26,8 +26,15 @@ public class BoardController : MonoBehaviour
                 currentTile.name = $"tile (q={q}, r={r})";
                 var tileController = currentTile.GetComponentInChildren<TileController>();
                 _coordinates[coord] = tileController;
-                tileController.RegisterMovementSystem(movementSystem);
+                tileController.Position = coord;
             }
         }
+        ONFinished?.Invoke();
+        ONFinished = null;
+    }
+
+    public void OnFinished(Action action)
+    {
+        ONFinished += action;
     }
 }
