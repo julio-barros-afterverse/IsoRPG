@@ -3,16 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class LocalPlayerSystem : MonoBehaviour
 {
+    [SerializeField] private Animator _animator;
+
     private Queue<Vector3> _path = new Queue<Vector3>();
     private Vector3 _targetPosition = Vector3.zero;
     private Vector3 _sourcePosition = Vector3.zero;
     private float _animationProgress = 1f;
     private float _animationDuration = 1f;
     public float Speed = 3f;
-    [SerializeField] private Animator _animator;
+
     private static readonly int Walking = Animator.StringToHash("Walking");
+
+    public TileSystem CurrentTile;
 
     public void Move2D(Vector3 position)
     {

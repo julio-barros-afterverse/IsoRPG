@@ -1,15 +1,16 @@
 ﻿using System;
+using MainGameState;
 using Model;
 using UnityEngine;
 
-public class TileController : MonoBehaviour
+public class TileSystem : MonoBehaviour
 {
     [SerializeField] private Renderer tile;
 
     private Color _defaultColor;
     private Color _altColor;
 
-    private TileMovementSystem _movementSystem;
+    private MainGameStateMachine _stateMachine;
 
     public Hex Position;
 
@@ -26,22 +27,22 @@ public class TileController : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        _movementSystem.OnHoverTile(this);
+        _stateMachine.CurrentState.OnHoverTile(this);
     }
     
     private void OnMouseExit()
     {
-        _movementSystem.OnUnhoverTile(this);
+        _stateMachine.CurrentState.OnUnhoverTile(this);
     }
 
     private void OnMouseUp()
     {
-        if (_movementSystem == null) return;
-        _movementSystem.OnMoveToTile(this);
+        if (_stateMachine.CurrentState == null) return;
+        _stateMachine.CurrentState.OnSelectTile(this);
     }
 
-    public void RegisterMovementSystem(TileMovementSystem s)
+    public void RegisterMainGameStateMachine(MainGameStateMachine s)
     {
-        _movementSystem = s;
+        _stateMachine = s;
     }
 }

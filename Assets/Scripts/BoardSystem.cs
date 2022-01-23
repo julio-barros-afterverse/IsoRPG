@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using Model;
 using UnityEngine;
 
-public class BoardController : MonoBehaviour
+public class BoardSystem : MonoBehaviour
 {
     [SerializeField] private GameObject tile;
-    private TileController[][] _tileArray;
-    private readonly Dictionary<Hex, TileController> _coordinates = new Dictionary<Hex, TileController>();
-    public Dictionary<Hex, TileController> Coordinates => _coordinates;
-    private event Action ONFinished;
+
+    private TileSystem[][] _tileArray;
+    private readonly Dictionary<Hex, TileSystem> _coordinates = new Dictionary<Hex, TileSystem>();
+    public Dictionary<Hex, TileSystem> Coordinates => _coordinates;
+    private event System.Action ONFinished;
 
     void Start()
     {
@@ -24,7 +25,7 @@ public class BoardController : MonoBehaviour
                 var currentTile = 
                     Instantiate(tile, new Vector3(posX, 0, -posZ), Quaternion.identity, transform);
                 currentTile.name = $"tile (q={q}, r={r})";
-                var tileController = currentTile.GetComponentInChildren<TileController>();
+                var tileController = currentTile.GetComponentInChildren<TileSystem>();
                 _coordinates[coord] = tileController;
                 tileController.Position = coord;
             }
@@ -33,7 +34,7 @@ public class BoardController : MonoBehaviour
         ONFinished = null;
     }
 
-    public void OnFinished(Action action)
+    public void OnFinished(System.Action action)
     {
         ONFinished += action;
     }
