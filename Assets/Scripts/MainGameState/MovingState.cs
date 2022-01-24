@@ -9,21 +9,24 @@ namespace MainGameState
         private readonly LocalPlayerSystem _localPlayerSystem;
         private readonly BoardSystem _boardSystem;
         private readonly MainGameStateMachine _stateMachine;
+        private readonly TileSystem _tile;
 
         public MovingState(
             LocalPlayerSystem localPlayerSystem,
             BoardSystem boardSystem,
-            MainGameStateMachine stateMachine
+            MainGameStateMachine stateMachine,
+            TileSystem tile
         )
         {
             _localPlayerSystem = localPlayerSystem;
             _boardSystem = boardSystem;
             _stateMachine = stateMachine;
+            _tile = tile;
         }
 
-        public override void OnSelectTile(TileSystem tile)
+        public override void OnEnter()
         {
-            var distance = Hex.Distance(_localPlayerSystem.CurrentTile.Position, tile.Position);
+            var distance = Hex.Distance(_localPlayerSystem.CurrentTile.Position, _tile.Position);
             if (distance <= 0)
             {
                 return;
@@ -32,20 +35,19 @@ namespace MainGameState
             Queue<Vector3> path = new Queue<Vector3>();
             for (int i = 0; i <= distance; i++)
             {
-                var coord = Hex.Lerp(_localPlayerSystem.CurrentTile.Position, tile.Position, (1.0f / distance) * i);
+                var coord = Hex.Lerp(_localPlayerSystem.CurrentTile.Position, _tile.Position, (1.0f / distance) * i);
                 var point = _boardSystem.Coordinates[coord];
                 point.SetOnPath(true);
                 path.Enqueue(point.transform.position);
             }
             _localPlayerSystem.Move2D(path);
-            _localPlayerSystem.CurrentTile = tile;
+            _localPlayerSystem.CurrentTile = _tile;
 
-            _stateMachine.CurrentState = new AimingState(
+            _stateMachine.ChangeState(new AimingState(
                 _localPlayerSystem,
                 _boardSystem,
-                this,
                 _stateMachine
-            );
+            ));
         }
     }
 }

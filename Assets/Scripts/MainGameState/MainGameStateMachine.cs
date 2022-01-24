@@ -1,5 +1,6 @@
 using Model;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MainGameState
 {
@@ -7,11 +8,21 @@ namespace MainGameState
     {
         [SerializeField] private LocalPlayerSystem localPlayerSystem;
         [SerializeField] private BoardSystem boardSystem;
-        public MainGameState CurrentState;
+        public Text ActionText;
+        public Button ActionButtonPrefab;
+        private MainGameState _currentState;
+        public MainGameState CurrentState => _currentState;
+
+        public void ChangeState(MainGameState nextState)
+        {
+            _currentState.OnExit();
+            _currentState = nextState;
+            _currentState.OnEnter();
+        }
 
         private void Awake()
         {
-            CurrentState = new MovingState(localPlayerSystem, boardSystem, this);
+            _currentState = new AimingState(localPlayerSystem, boardSystem, this);
             boardSystem.OnFinished(() =>
             {
                 foreach (var coord in boardSystem.Coordinates.Values)

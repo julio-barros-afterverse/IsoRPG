@@ -1,5 +1,4 @@
 using Model;
-using UnityEngine;
 
 namespace MainGameState
 {
@@ -7,26 +6,22 @@ namespace MainGameState
     {
         private readonly LocalPlayerSystem _localPlayerSystem;
         private readonly BoardSystem _boardSystem;
-        private readonly MainGameState _nextState;
         private readonly MainGameStateMachine _stateMachine;
 
         public AimingState(
             LocalPlayerSystem localPlayerSystem,
             BoardSystem boardSystem,
-            MainGameState nextState,
             MainGameStateMachine stateMachine
         )
         {
             _localPlayerSystem = localPlayerSystem;
             _boardSystem = boardSystem;
-            _nextState = nextState;
             _stateMachine = stateMachine;
         }
 
         public override void OnSelectTile(TileSystem tile)
         {
-            _stateMachine.CurrentState = _nextState;
-            _stateMachine.CurrentState.OnSelectTile(tile);
+            _stateMachine.ChangeState(new MovingState(_localPlayerSystem, _boardSystem, _stateMachine, tile));
         }
 
         public override void OnHoverTile(TileSystem tile)

@@ -22,5 +22,10 @@ namespace Model.Movement
         {
             return new MovementAction(target);
         }
+
+        public override string Name()
+        {
+            return "Move";
+        }
     }
 }
