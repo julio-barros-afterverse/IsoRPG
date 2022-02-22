@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using Model;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MainGameState
 {
@@ -24,12 +26,12 @@ namespace MainGameState
             _tile = tile;
         }
 
-        public override void OnEnter()
+        public override IEnumerator OnEnter()
         {
             var distance = Hex.Distance(_localPlayerSystem.CurrentTile.Position, _tile.Position);
             if (distance <= 0)
             {
-                return;
+                yield break;
             }
 
             Queue<Vector3> path = new Queue<Vector3>();
@@ -43,11 +45,20 @@ namespace MainGameState
             _localPlayerSystem.Move2D(path);
             _localPlayerSystem.CurrentTile = _tile;
 
-            _stateMachine.ChangeState(new AimingState(
-                _localPlayerSystem,
-                _boardSystem,
-                _stateMachine
+            _stateMachine.ChangeState(new SelectActionState(
+                _stateMachine,
+                _stateMachine.OptionButtonPrefab
             ));
+        }
+
+        public override IEnumerator OnExit()
+        {
+            foreach (var coord in _boardSystem.Coordinates.Values)
+            {
+                coord.SetOnPath(false);
+            }
+
+            yield break;
         }
     }
 }

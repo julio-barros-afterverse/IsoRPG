@@ -15,7 +15,6 @@ namespace Model
 
         public abstract AimStrategy AimStrategy();
         public abstract List<TargetPermissions> TargetPermissions();
-        public abstract IAction GenerateAction(Hex target);
         public abstract string Name();
     }
 

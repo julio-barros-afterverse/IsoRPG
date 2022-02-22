@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace Model.Movement
+namespace Model.Action
 {
-    public class MovementActionConfiguration: ActionConfiguration
+    public class LightningActionConfiguration: ActionConfiguration
     {
-        public MovementActionConfiguration(int maxReach, int minReach) : base(maxReach, minReach)
+        public LightningActionConfiguration(int maxReach, int minReach) : base(maxReach, minReach)
         {
         }
 
@@ -18,14 +18,9 @@ namespace Model.Movement
             return new List<TargetPermissions>();
         }
 
-        public override IAction GenerateAction(Hex target)
-        {
-            return new MovementAction(target);
-        }
-
         public override string Name()
         {
-            return "Move";
+            return "Lightning";
         }
     }
 }

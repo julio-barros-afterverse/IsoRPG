@@ -17,6 +17,7 @@ public class LocalPlayerSystem : MonoBehaviour
     private static readonly int Walking = Animator.StringToHash("Walking");
 
     public TileSystem CurrentTile;
+    private static readonly int Lightning1 = Animator.StringToHash("Lightning");
 
     public void Move2D(Vector3 position)
     {
@@ -54,5 +55,10 @@ public class LocalPlayerSystem : MonoBehaviour
         transform.position = Vector3.Lerp(_sourcePosition, _targetPosition, Mathf.Clamp01(_animationProgress));
         
         if (_animationProgress >= 1f) _animator.SetBool(Walking, false);
+    }
+
+    public void Lightning()
+    {
+        _animator.SetTrigger(Lightning1);
     }
 }

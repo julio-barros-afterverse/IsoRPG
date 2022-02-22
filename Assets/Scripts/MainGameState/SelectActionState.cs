@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Model;
 using UnityEngine;
@@ -23,10 +24,12 @@ namespace MainGameState
         {
             _stateMachine = stateMachine;
             _actionButtonPrefab = actionButtonPrefab;
+            _actionConfigurations = _stateMachine.ActionConfigurations;
         }
 
-        public override void OnEnter()
+        public override IEnumerator OnEnter()
         {
+            _stateMachine.SelectActionText.enabled = true;
             var t = 1f;
             var maxT = _actionConfigurations.Count + 1;
             foreach (var actionConfiguration in _actionConfigurations)
@@ -36,10 +39,34 @@ namespace MainGameState
                 button.GetComponentInChildren<Text>().text = actionConfiguration.Name();
                 var position = (float) Util.IntLerp(minX, maxX, t / maxT);
                 var transform = button.transform;
+                transform.SetParent(_stateMachine.Canvas.transform);
                 var buttonPos = transform.position;
-                transform.position = new Vector3(position, buttonPos.y, buttonPos.z);
+                transform.localPosition = new Vector3(position, -171f, buttonPos.z);
                 t += 1;
+                button.onClick.AddListener(() =>
+                {
+                    _stateMachine.ChangeState(new AimingState(
+                        _stateMachine.LocalPlayerSystem,
+                        _stateMachine.BoardSystem,
+                        _stateMachine,
+                        actionConfiguration
+                        ));
+                });
             }
+
+            yield break;
+        }
+
+        public override IEnumerator OnExit()
+        {
+            _stateMachine.SelectActionText.enabled = false;
+            foreach (var configButton in buttonByConfig)
+            {
+                Object.Destroy(configButton.Value.gameObject);
+            }
+            buttonByConfig.Clear();
+
+            yield break;
         }
     }
 }

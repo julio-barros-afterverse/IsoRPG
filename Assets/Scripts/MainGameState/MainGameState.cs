@@ -1,11 +1,17 @@
-using UnityEngine;
+using System.Collections;
 
 namespace MainGameState
 {
     public abstract class MainGameState
     {
-        public virtual void OnEnter() {}
-        public virtual void OnExit() {}
+        public virtual IEnumerator OnEnter()
+        {
+            yield break;
+        }
+        public virtual IEnumerator OnExit()
+        {
+            yield break;
+        }
         public virtual void OnHoverTile(TileSystem tile)
         {
         }
